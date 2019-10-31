@@ -1,11 +1,17 @@
 preset: laravel
+
+risky: true
+
 disabled:
   - concat_without_spaces
   - length_ordered_imports
-enable:
+enabled:
   - concat_with_spaces
   - alpha_ordered_imports
+
 finder:
   not-name:
-    - index.php
-    - server.php
+    - "index.php"
+    - "server.php"
+  exclude:
+    - "vendor"
