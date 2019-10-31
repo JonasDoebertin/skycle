@@ -25,7 +25,6 @@ Route::get('/test/decorate', 'TestController@decorate');
 Route::get('/test/weather', 'TestController@weather');
 
 Route::prefix('strava')->namespace('\App\Strava\Controllers')->group(function () {
-
     Route::get('authorize', 'AuthorizeController')
         ->name('strava.oauth.authorize');
 
@@ -39,5 +38,4 @@ Route::prefix('strava')->namespace('\App\Strava\Controllers')->group(function ()
     Route::post('webhook', 'WebhookController')
         ->middleware('json')
         ->name('strava.webhook.invoke');
-
 });

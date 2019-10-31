@@ -2,8 +2,8 @@
 
 namespace App\Darksky\Listeners;
 
-use App\Strava\Events\ActivityFetched;
 use App\Darksky\Jobs\FetchCondition;
+use App\Strava\Events\ActivityFetched;
 
 class DispatchConditionFetching
 {

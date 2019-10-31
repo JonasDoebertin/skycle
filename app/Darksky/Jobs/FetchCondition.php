@@ -2,13 +2,13 @@
 
 namespace App\Darksky\Jobs;
 
-use App\Darksky\Components\ConditionFetcher;
 use App\Base\Models\Activity;
+use App\Darksky\Components\ConditionFetcher;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class FetchCondition implements ShouldQueue
 {

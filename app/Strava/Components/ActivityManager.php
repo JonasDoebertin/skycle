@@ -37,7 +37,7 @@ class ActivityManager
             throw ActivityAlreadyExistsException::create($foreignId);
         }
 
-        if (!$owner = Athlete::findByForeignId($ownerId)) {
+        if (! $owner = Athlete::findByForeignId($ownerId)) {
             throw UnknownAthleteException::create($ownerId);
         }
 

@@ -1,7 +1,6 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-
 use App\Strava\Models\Activity;
 use App\Strava\Models\Athlete;
 use Faker\Generator as Faker;

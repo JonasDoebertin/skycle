@@ -1,9 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-
-use App\Strava\Models\Athlete;
 use App\Base\Models\User;
+use App\Strava\Models\Athlete;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 

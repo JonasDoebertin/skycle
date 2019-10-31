@@ -2,12 +2,11 @@
 
 namespace App\Darksky\Components;
 
-use App\Darksky\Events\ConditionFetched;
 use App\Base\Models\Activity;
+use App\Darksky\Events\ConditionFetched;
 use App\Darksky\Models\Condition;
 use DmitryIvanov\DarkSkyApi\Service;
 use DmitryIvanov\DarkSkyApi\Weather\DataPoint;
-use Illuminate\Support\Carbon;
 
 class ConditionFetcher
 {
