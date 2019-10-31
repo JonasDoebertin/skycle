@@ -2,16 +2,14 @@
 
 namespace App\Strava\Jobs;
 
-use App\Strava\Components\ActivityFetcher;
 use App\Strava\Components\TokenRefresher;
 use App\Strava\Jobs\Middleware\RateLimited;
-use App\Strava\Models\Activity;
 use App\Strava\Models\Athlete;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class RefreshToken implements ShouldQueue
 {

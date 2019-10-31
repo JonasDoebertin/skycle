@@ -26,7 +26,7 @@ class TokenRefresher
         $this->athlete = $athlete;
 
         // Early exit if the athlete has not expired
-        if (!$this->athlete->isExpired()) {
+        if (! $this->athlete->isExpired()) {
             return;
         }
 
