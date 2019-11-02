@@ -7,10 +7,10 @@ use App\Strava\Concerns\RefreshesTokens;
 use App\Strava\Jobs\Middleware\RateLimited;
 use App\Strava\Models\Activity;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class FetchActivity implements ShouldQueue
 {

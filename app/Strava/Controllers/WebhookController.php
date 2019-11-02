@@ -2,10 +2,10 @@
 
 namespace App\Strava\Controllers;
 
-use App\Strava\Events\ActivityCreated;
 use App\Http\Controllers\Controller;
-use App\Strava\Requests\CallbackRequest;
 use App\Strava\Components\ActivityManager;
+use App\Strava\Events\ActivityCreated;
+use App\Strava\Requests\CallbackRequest;
 use Illuminate\Support\Facades\Response;
 
 class WebhookController extends Controller
@@ -33,7 +33,7 @@ class WebhookController extends Controller
      */
     public function __invoke(CallbackRequest $request)
     {
-        if ($request->reportsActivity() && !$this->isKnownActivity($request)) {
+        if ($request->reportsActivity() && ! $this->isKnownActivity($request)) {
             $this->saveActivity($request);
         }
 

@@ -2,11 +2,10 @@
 
 namespace App\Strava\Components;
 
-use App\Strava\Events\ActivityFetched;
 use App\Strava\Concerns\ConnectsToStrava;
+use App\Strava\Events\ActivityFetched;
 use App\Strava\Models\Activity;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class ActivityFetcher
 {
@@ -34,7 +33,7 @@ class ActivityFetcher
         $this->prepare($activity);
 
         // Early exit if the activity has already been fetched
-        if (!$force && $this->hasBeenFetched()) {
+        if (! $force && $this->hasBeenFetched()) {
             return;
         }
 

@@ -20,7 +20,7 @@ class CallbackController extends Controller
      */
     public function __invoke(Request $request)
     {
-        if (!$this->providedWithCorrectScope($request)) {
+        if (! $this->providedWithCorrectScope($request)) {
             return redirect($this->getAuthorizationUrl());
         }
 
