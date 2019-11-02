@@ -147,6 +147,7 @@ return [
 
     'include' => [
         'deployer/horizon.php',
+        'deployer/strava.php',
         'deployer/telescope.php',
     ],
 
