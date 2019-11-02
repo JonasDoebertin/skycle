@@ -70,6 +70,7 @@ return [
         // Deployment is done and live
         'done' => [
             'fpm:reload',
+            'artisan:strava:webhook',
         ],
 
         // Deployment succeeded.

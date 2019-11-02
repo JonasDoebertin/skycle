@@ -17,27 +17,23 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
+
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/test/fetch', 'TestController@fetch');
-Route::get('/test/decorate', 'TestController@decorate');
-Route::get('/test/weather', 'TestController@weather');
+Route::prefix('strava')
+    ->namespace('\App\Strava\Controllers')
+    ->middleware('verified')
+    ->group(function () {
 
-Route::prefix('strava')->namespace('\App\Strava\Controllers')->group(function () {
+    Route::get('authorize', 'AuthorizeController')->name('strava.oauth.authorize');
 
-    Route::get('authorize', 'AuthorizeController')
-        ->name('strava.oauth.authorize');
+    Route::get('callback', 'CallbackController')->name('strava.oauth.callback');
 
-    Route::get('callback', 'CallbackController')
-        ->name('strava.oauth.callback');
+    Route::get('webhook', 'WebhookValidationController')->name('strava.webhook.validation')
+        ->middleware('json');
 
-    Route::get('webhook', 'WebhookValidationController')
-        ->middleware('json')
-        ->name('strava.webhook.validation');
-
-    Route::post('webhook', 'WebhookController')
-        ->middleware('json')
-        ->name('strava.webhook.invoke');
+    Route::post('webhook', 'WebhookController')->name('strava.webhook.invoke')
+        ->middleware('json');
 
 });
