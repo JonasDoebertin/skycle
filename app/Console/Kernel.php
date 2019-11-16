@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('telescope:prune')->daily();
+
+        $schedule->command('strava:prune')->daily();
     }
 
     /**

@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 
 class SendActivity implements ShouldQueue
 {
@@ -46,6 +47,15 @@ class SendActivity implements ShouldQueue
         return [
             new RateLimited(),
         ];
+    }
+
+    /**
+     * Determine the time at which the job should timeout.
+     *
+     */
+    public function retryUntil(): Carbon
+    {
+        return now()->addHour();
     }
 
     /**

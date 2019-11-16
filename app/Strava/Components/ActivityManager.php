@@ -6,6 +6,7 @@ use App\Strava\Exceptions\ActivityAlreadyExistsException;
 use App\Strava\Exceptions\UnknownAthleteException;
 use App\Strava\Models\Activity;
 use App\Strava\Models\Athlete;
+use App\Strava\States\Activity\Pruned;
 
 class ActivityManager
 {
@@ -37,7 +38,7 @@ class ActivityManager
             throw ActivityAlreadyExistsException::create($foreignId);
         }
 
-        if (! $owner = Athlete::findByForeignId($ownerId)) {
+        if (!$owner = Athlete::findByForeignId($ownerId)) {
             throw UnknownAthleteException::create($ownerId);
         }
 
@@ -46,5 +47,30 @@ class ActivityManager
             $activity->athlete()->associate($owner);
             $activity->save();
         });
+    }
+
+    /**
+     * Remove sensitive data from an activity.
+     *
+     * @param \App\Strava\Models\Activity $activity
+     * @throws \Spatie\ModelStates\Exceptions\CouldNotPerformTransition
+     */
+    public function prune(Activity $activity): void
+    {
+        // Clear fields containing sensitive data
+        $activity->update([
+            'name'            => null,
+            'description'     => null,
+            'timezone'        => null,
+            'start_time'      => null,
+            'start_longitude' => null,
+            'start_latitude'  => null,
+            'end_time'        => null,
+            'end_longitude'   => null,
+            'end_latitude'    => null,
+        ]);
+
+        // Transition to pruned state
+        $activity->transitionTo(Pruned::class);
     }
 }

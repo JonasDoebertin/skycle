@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 
 class FetchCondition implements ShouldQueue
 {
@@ -41,6 +42,15 @@ class FetchCondition implements ShouldQueue
         return [
             new RateLimited(),
         ];
+    }
+
+    /**
+     * Determine the time at which the job should timeout.
+     *
+     */
+    public function retryUntil(): Carbon
+    {
+        return now()->addDay();
     }
 
     /**
