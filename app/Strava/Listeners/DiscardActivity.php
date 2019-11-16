@@ -17,7 +17,7 @@ class DiscardActivity
      */
     public function handle(ActivityDiscarded $event): void
     {
-        if (!($event->activity instanceof Activity)) {
+        if (! ($event->activity instanceof Activity)) {
             return;
         }
 

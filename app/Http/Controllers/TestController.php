@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Darksky\Components\Fetcher;
-use App\Strava\Jobs\SendActivity;
 use App\Strava\Jobs\FetchActivity;
+use App\Strava\Jobs\SendActivity;
 use App\Strava\Models\Activity;
 use App\Strava\Models\Athlete;
 

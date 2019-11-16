@@ -51,7 +51,6 @@ class FetchActivity implements ShouldQueue
 
     /**
      * Determine the time at which the job should timeout.
-     *
      */
     public function retryUntil(): Carbon
     {

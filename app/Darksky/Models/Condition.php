@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * App\Darksky\Models\Condition
+ * App\Darksky\Models\Condition.
  *
  * @property int $id
  * @property int|null $activity_id

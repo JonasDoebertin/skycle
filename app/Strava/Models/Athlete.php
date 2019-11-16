@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * App\Strava\Models\Athlete
+ * App\Strava\Models\Athlete.
  *
  * @property int $id
  * @property int $user_id

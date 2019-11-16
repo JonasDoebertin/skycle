@@ -17,7 +17,7 @@ class MarkActivityAsDecorated
      */
     public function handle(ConditionFetched $event)
     {
-        if (!($event->activity instanceof Activity)) {
+        if (! ($event->activity instanceof Activity)) {
             return;
         }
 
