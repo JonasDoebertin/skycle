@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\ModelStates\HasStates;
 
 /**
- * App\Strava\Models\Activity
+ * App\Strava\Models\Activity.
  *
  * @property \App\Strava\States\Activity\ActivityState $state
  * @property int $id

@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Base\Models\Policies\UserPolicy;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Horizon\Horizon;
 use Laravel\Horizon\HorizonApplicationServiceProvider;

@@ -6,7 +6,6 @@ use App\Strava\Concerns\ConnectsToStrava;
 use App\Strava\Events\ActivitySent;
 use App\Strava\Models\Activity;
 use App\Strava\States\Activity\Decorated;
-use App\Strava\States\Activity\Fetched;
 use App\Strava\States\Activity\Sent;
 
 class ActivitySender
@@ -23,7 +22,7 @@ class ActivitySender
     public function send(Activity $activity): void
     {
         // Early exit if the activity has already been decorated
-        if (!$activity->hasState(Decorated::class)) {
+        if (! $activity->hasState(Decorated::class)) {
             return;
         }
 

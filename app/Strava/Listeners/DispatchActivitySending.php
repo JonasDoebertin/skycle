@@ -16,7 +16,7 @@ class DispatchActivitySending
      */
     public function handle(ConditionFetched $event)
     {
-        if (!($event->activity instanceof Activity)) {
+        if (! ($event->activity instanceof Activity)) {
             return;
         }
 

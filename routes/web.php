@@ -24,20 +24,18 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::prefix('strava')
     ->namespace('\App\Strava\Controllers')
     ->group(function () {
-
-    Route::get('authorize', 'AuthorizeController')
+        Route::get('authorize', 'AuthorizeController')
         ->name('strava.oauth.authorize')
         ->middleware('verified');
 
-    Route::get('callback', 'CallbackController')
+        Route::get('callback', 'CallbackController')
         ->name('strava.oauth.callback');
 
-    Route::get('webhook', 'WebhookValidationController')
+        Route::get('webhook', 'WebhookValidationController')
         ->name('strava.webhook.validation')
         ->middleware('json');
 
-    Route::post('webhook', 'WebhookController')
+        Route::post('webhook', 'WebhookController')
         ->name('strava.webhook.invoke')
         ->middleware('json');
-
-});
+    });

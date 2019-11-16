@@ -25,7 +25,7 @@ class ActivityFetcher
     public function fetch(Activity $activity): void
     {
         // Early exit if the activity has already been fetched
-        if (!$activity->hasState(Reported::class)) {
+        if (! $activity->hasState(Reported::class)) {
             return;
         }
 

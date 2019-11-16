@@ -6,8 +6,6 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class VerifyWebhook extends Command
 {
@@ -50,7 +48,7 @@ class VerifyWebhook extends Command
     public function handle()
     {
         try {
-            if (!$this->verifyWebhook()) {
+            if (! $this->verifyWebhook()) {
                 return $this->unregistered();
             }
         } catch (TransferException $e) {
