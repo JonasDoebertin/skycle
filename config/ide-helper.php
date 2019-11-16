@@ -81,6 +81,7 @@ return [
 
     'model_locations' => [
         'app/Base/Models',
+        'app/Darksky/Models',
         'app/Strava/Models',
     ],
 

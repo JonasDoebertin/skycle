@@ -5,6 +5,38 @@ namespace App\Strava\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * App\Strava\Models\Athlete
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $foreign_id
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $profile_picture
+ * @property string $refresh_token
+ * @property string $access_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $expires_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Strava\Models\Activity[] $activities
+ * @property-read int|null $activities_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereAccessToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereForeignId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereProfilePicture($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereRefreshToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Strava\Models\Athlete whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Athlete extends Model
 {
     /**
