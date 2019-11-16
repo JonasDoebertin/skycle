@@ -26,6 +26,14 @@
                                 <a class="no-underline hover:underline text-gray-300 text-sm p-3" href="{{ route('register') }}">{{ __('Register') }}</a>
                             @endif
                         @else
+                            @can('view-horizon', \App\Base\Models\User::class)
+                                <a class="no-underline hover:underline text-gray-300 text-sm p-3" href="{{ route('horizon.index') }}">{{ __('Horizon') }}</a>
+                            @endcan
+
+                            @can('view-telescope', \App\Base\Models\User::class)
+                                <a class="no-underline hover:underline text-gray-300 text-sm p-3" href="{{ route('telescope') }}">{{ __('Telescope') }}</a>
+                            @endcan
+
                             <span class="text-gray-300 text-sm pr-4">{{ Auth::user()->name }}</span>
 
                             <a href="{{ route('logout') }}"

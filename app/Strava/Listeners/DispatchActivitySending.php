@@ -3,9 +3,10 @@
 namespace App\Strava\Listeners;
 
 use App\Darksky\Events\ConditionFetched;
-use App\Strava\Jobs\DecorateActivity;
+use App\Strava\Jobs\SendActivity;
+use App\Strava\Models\Activity;
 
-class DispatchActivityDecoration
+class DispatchActivitySending
 {
     /**
      * Handle the event.
@@ -15,6 +16,10 @@ class DispatchActivityDecoration
      */
     public function handle(ConditionFetched $event)
     {
-        DecorateActivity::dispatch($event->activity);
+        if (!($event->activity instanceof Activity)) {
+            return;
+        }
+
+        SendActivity::dispatch($event->activity);
     }
 }

@@ -62,10 +62,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewTelescope', function ($user) {
-            return in_array($user->email, [
-                config('skycle.admin.email'),
-            ]);
-        });
+        // Nothing to do here, since the "view-telescope" ability
+        // has already been already defined in the user policy.
     }
 }

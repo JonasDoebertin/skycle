@@ -3,7 +3,8 @@
 namespace App\Darksky\Jobs;
 
 use App\Base\Models\Activity;
-use App\Darksky\Components\ConditionFetcher;
+use App\Darksky\Components\Fetcher;
+use App\Darksky\Jobs\Middleware\RateLimited;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -38,18 +39,18 @@ class FetchCondition implements ShouldQueue
     public function middleware()
     {
         return [
-//            new RateLimited('darksky'),
+            new RateLimited(),
         ];
     }
 
     /**
      * Execute the job.
      *
-     * @param \App\Darksky\Components\ConditionFetcher $fetcher
+     * @param \App\Darksky\Components\Fetcher $fetcher
      * @return void
      * @throws \Throwable
      */
-    public function handle(ConditionFetcher $fetcher): void
+    public function handle(Fetcher $fetcher): void
     {
         $fetcher->fetch($this->activity);
     }

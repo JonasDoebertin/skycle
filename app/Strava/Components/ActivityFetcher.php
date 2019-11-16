@@ -3,71 +3,51 @@
 namespace App\Strava\Components;
 
 use App\Strava\Concerns\ConnectsToStrava;
+use App\Strava\Concerns\ParsesTimezones;
 use App\Strava\Events\ActivityFetched;
 use App\Strava\Models\Activity;
+use App\Strava\States\Activity\Fetched;
+use App\Strava\States\Activity\Reported;
 use Illuminate\Support\Carbon;
 
 class ActivityFetcher
 {
-    use ConnectsToStrava;
-
-    /**
-     * @var \App\Strava\Models\Activity
-     */
-    protected $activity;
-
-    /**
-     * @var \Strava\API\Client
-     */
-    protected $strava;
+    use ConnectsToStrava,
+        ParsesTimezones;
 
     /**
      * Fetch an activity in detail from Strava.
      *
      * @param \App\Strava\Models\Activity $activity
-     * @param bool $force
      * @throws \Strava\API\Exception
+     * @throws \Spatie\ModelStates\Exceptions\CouldNotPerformTransition
      */
-    public function fetch(Activity $activity, $force = false)
+    public function fetch(Activity $activity): void
     {
-        $this->prepare($activity);
-
         // Early exit if the activity has already been fetched
-        if (! $force && $this->hasBeenFetched()) {
+        if (!$activity->hasState(Reported::class)) {
             return;
         }
 
-        $details = $this->strava->getActivity($activity->foreign_id, false);
+        $details = $this->getStravaClient($activity->athlete)
+            ->getActivity($activity->foreign_id, false);
 
-        $this->saveActivityDetails($details);
-    }
-
-    protected function prepare(Activity $activity)
-    {
-        $this->activity = $activity;
-        $this->strava = $this->getStravaClient($activity->athlete);
-    }
-
-    /**
-     * Check whether the activity has already been fetched.
-     *
-     * @return bool
-     */
-    protected function hasBeenFetched()
-    {
-        return $this->activity->isFetched();
+        $this->saveDetails($activity, $details);
+        $this->transitionToFetchedState($activity);
+        $this->notify($activity);
     }
 
     /**
      * Save an activities details.
      *
+     * @param \App\Strava\Models\Activity $activity
      * @param array $details
      */
-    protected function saveActivityDetails(array $details)
+    protected function saveDetails(Activity $activity, array $details)
     {
         $startTime = Carbon::parse(data_get($details, 'start_date'), 'UTC');
 
-        $this->activity->update([
+        $activity->update([
             'name'            => data_get($details, 'name'),
             'description'     => data_get($details, 'description'),
             'timezone'        => $this->parseTimezone(data_get($details, 'timezone')),
@@ -77,26 +57,27 @@ class ActivityFetcher
             'end_time'        => $startTime->clone()->addSeconds(data_get($details, 'elapsed_time')),
             'end_latitude'    => data_get($details, 'end_latlng.0'),
             'end_longitude'   => data_get($details, 'end_latlng.1'),
-            'fetched_at'      => now(),
         ]);
-
-        event(new ActivityFetched($this->activity));
     }
 
     /**
-     * Extract a usable timezone out of a Strava time zone string.
+     * Transition the activity to "fetched" state.
      *
-     * @param string $timezone
-     * @return string
+     * @param \App\Strava\Models\Activity $activity
+     * @throws \Spatie\ModelStates\Exceptions\CouldNotPerformTransition
      */
-    protected function parseTimezone(string $timezone): string
+    protected function transitionToFetchedState(Activity $activity): void
     {
-        preg_match(
-            '/\([^\)]*\)\s(.*)/i',
-            $timezone,
-            $matches
-        );
+        $activity->transitionTo(Fetched::class);
+    }
 
-        return data_get($matches, 1, 'UTC');
+    /**
+     * Notify application about a newly fetched activity.
+     *
+     * @param \App\Strava\Models\Activity $activity
+     */
+    protected function notify(Activity $activity): void
+    {
+        event(new ActivityFetched($activity));
     }
 }

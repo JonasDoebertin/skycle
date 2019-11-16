@@ -4,7 +4,7 @@ namespace App\Darksky\Components;
 
 use App\Darksky\Models\Condition;
 
-class ConditionConverter
+class Converter // TODO: split emoji and summary converters
 {
     const EMOJI_NEW_MOON = '🌑';
     const EMOJI_WAXING_CRESCENT = '🌒';
@@ -43,6 +43,7 @@ class ConditionConverter
         'wind' => self::EMOJI_WIND,
         'cloudy' => self::EMOJI_CLOUD,
         'fog' => self::EMOJI_CLOUD,
+        'partly-cloudy-night' => self::EMOJI_CLOUD,
     ];
 
     const MOONPHASE_EMOJIS = [
@@ -152,6 +153,7 @@ class ConditionConverter
         if (
             $condition->wind_gust !== null
             && $condition->wind_gust !== 0
+            && $condition->wind_gust !== $condition->wind_speed
         ) {
             return 'Wind:'
                 . ' ' . $this->getWindDirectionEmoji($condition)

@@ -8,7 +8,7 @@ use Strava\API\OAuth;
 trait HandlesOAuth
 {
     /**
-     * Get the oAuth authorization url.
+     * Build the OAuth authorization url.
      *
      * @return string
      */
@@ -26,7 +26,7 @@ trait HandlesOAuth
     }
 
     /**
-     * Get the oAuth token exchange url.
+     * Get the OAuth token exchange url.
      *
      * @param string $authorizationToken
      * @return \League\OAuth2\Client\Token\AccessToken
@@ -45,6 +45,11 @@ trait HandlesOAuth
         ]);
     }
 
+    /**
+     * @param string $refreshToken
+     * @return \League\OAuth2\Client\Token\AccessTokenInterface
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
+     */
     protected function refreshAccessToken(string $refreshToken): AccessTokenInterface
     {
         $oauth = new OAuth([

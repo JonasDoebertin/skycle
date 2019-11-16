@@ -3,22 +3,18 @@
 namespace App\Darksky\Components;
 
 use App\Base\Models\Activity;
+use App\Darksky\Events\ActivityDiscarded;
 use App\Darksky\Events\ConditionFetched;
 use App\Darksky\Models\Condition;
 use DmitryIvanov\DarkSkyApi\Service;
 use DmitryIvanov\DarkSkyApi\Weather\DataPoint;
 
-class ConditionFetcher
+class Fetcher
 {
     /**
      * @var \DmitryIvanov\DarkSkyApi\Service
      */
     protected $darksky;
-
-    /**
-     * @var \App\Base\Models\Activity
-     */
-    protected $activity;
 
     /**
      * Fetcher constructor.
@@ -38,29 +34,57 @@ class ConditionFetcher
      */
     public function fetch(Activity $activity)
     {
-        $this->activity = $activity;
+        if (! $this->hasLocationData($activity)) {
+            $this->discard($activity);
 
-        $observed = $this->fetchCondition();
-        $this->saveCondition($observed);
+            return;
+        }
+
+        $observed = $this->fetchCondition($activity);
+        $this->saveCondition($activity, $observed);
+        $this->notify($activity);
+    }
+
+    /**
+     * Check if an activity has location data attached.
+     *
+     * @param \App\Base\Models\Activity $activity
+     * @return bool
+     */
+    protected function hasLocationData(Activity $activity): bool
+    {
+        return $activity->start_latitude !== null
+            && $activity->start_longitude !== null;
+    }
+
+    /**
+     * Discard an activity.
+     *
+     * @param \App\Base\Models\Activity $activity
+     */
+    protected function discard(Activity $activity): void
+    {
+        event(new ActivityDiscarded($activity));
     }
 
     /**
      * Fetch an observed weather condition from Darksky.
      *
+     * @param \App\Base\Models\Activity $activity
      * @return \DmitryIvanov\DarkSkyApi\Weather\DataPoint
      * @throws \Throwable
      */
-    protected function fetchCondition(): DataPoint
+    protected function fetchCondition(Activity $activity): DataPoint
     {
         $response = $this->darksky
-            ->units('si')
-            ->language('de')
+            ->units('si')  // TODO: make configurable
+            ->language('de') // TODO: make configurable
             ->location(
-                $this->activity->start_latitude,
-                $this->activity->start_longitude
+                $activity->start_latitude,
+                $activity->start_longitude
             )
             ->timeMachine(
-                $this->activity->start_time->toDateTimeString(),
+                $activity->start_time->toDateTimeString(),
                 ['currently']
             );
 
@@ -70,9 +94,10 @@ class ConditionFetcher
     /**
      * Save an observed condition to the database.
      *
+     * @param \App\Base\Models\Activity $activity
      * @param \DmitryIvanov\DarkSkyApi\Weather\DataPoint $observed
      */
-    protected function saveCondition(DataPoint $observed)
+    protected function saveCondition(Activity $activity, DataPoint $observed)
     {
         $condition = tap(new Condition(), function (Condition $condition) use ($observed) {
             $condition->fill([
@@ -88,8 +113,16 @@ class ConditionFetcher
             ])->save();
         });
 
-        $this->activity->condition()->save($condition);
+        $activity->condition()->save($condition);
+    }
 
-        event(new ConditionFetched($this->activity));
+    /**
+     * Notify application about availability of a condition for an activity.
+     *
+     * @param \App\Base\Models\Activity $activity
+     */
+    protected function notify(Activity $activity): void
+    {
+        event(new ConditionFetched($activity));
     }
 }

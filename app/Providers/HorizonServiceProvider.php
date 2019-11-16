@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Base\Models\Policies\UserPolicy;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Horizon\Horizon;
 use Laravel\Horizon\HorizonApplicationServiceProvider;
@@ -33,10 +35,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewHorizon', function ($user) {
-            return in_array($user->email, [
-                config('skycle.admin.email'),
-            ]);
-        });
+        // Nothing to do here, since the "view-horizon" ability
+        // has already been already defined in the user policy.
     }
 }

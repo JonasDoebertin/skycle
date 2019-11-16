@@ -9,17 +9,6 @@ use App\Strava\Models\Athlete;
 trait RefreshesTokens
 {
     /**
-     * Check whether an athletes access token has expired.
-     *
-     * @param \App\Strava\Models\Athlete $athlete
-     * @return bool
-     */
-    protected function tokenHasExpired(Athlete $athlete): bool
-    {
-        return $athlete->isExpired();
-    }
-
-    /**
      * Dispatch token refresh job and redispatch self afterwards.
      *
      * @param \App\Strava\Models\Athlete $athlete

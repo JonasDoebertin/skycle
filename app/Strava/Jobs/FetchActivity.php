@@ -54,10 +54,11 @@ class FetchActivity implements ShouldQueue
      * @param \App\Strava\Components\ActivityFetcher $fetcher
      * @return void
      * @throws \Strava\API\Exception
+     * @throws \Spatie\ModelStates\Exceptions\CouldNotPerformTransition
      */
     public function handle(ActivityFetcher $fetcher): void
     {
-        if ($this->tokenHasExpired($this->activity->athlete)) {
+        if ($this->activity->athlete->tokenHasExpired()) {
             $this->refreshTokenAndReschedule($this->activity->athlete, $this->activity);
 
             return;

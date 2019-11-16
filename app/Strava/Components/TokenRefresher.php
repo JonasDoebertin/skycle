@@ -3,6 +3,7 @@
 namespace App\Strava\Components;
 
 use App\Strava\Concerns\HandlesOAuth;
+use App\Strava\Events\TokenRefreshed;
 use App\Strava\Models\Athlete;
 use Illuminate\Support\Carbon;
 
@@ -11,39 +12,44 @@ class TokenRefresher
     use HandlesOAuth;
 
     /**
-     * @var \App\Strava\Models\Athlete
-     */
-    protected $athlete;
-
-    /**
      * Refresh an athletes api access.
      *
      * @param \App\Strava\Models\Athlete $athlete
      */
     public function refresh(Athlete $athlete): void
     {
-        // Preparations
-        $this->athlete = $athlete;
-
         // Early exit if the athlete has not expired
-        if (! $this->athlete->isExpired()) {
+        if (! $athlete->tokenHasExpired()) {
             return;
         }
 
-        $this->refreshToken();
+        $this->refreshToken($athlete);
+        $this->notify($athlete);
     }
 
     /**
      * Request and store a fresh access token.
+     *
+     * @param \App\Strava\Models\Athlete $athlete
      */
-    protected function refreshToken(): void
+    protected function refreshToken(Athlete $athlete): void
     {
-        $token = $this->refreshAccessToken($this->athlete->refresh_token);
+        $token = $this->refreshAccessToken($athlete->refresh_token);
 
-        $this->athlete->update([
-            'refresh_token'   => $token->getRefreshToken(),
-            'access_token'    => $token->getToken(),
-            'expires_at'      => Carbon::createFromTimestamp($token->getExpires()),
+        $athlete->update([
+            'refresh_token' => $token->getRefreshToken(),
+            'access_token'  => $token->getToken(),
+            'expires_at'    => Carbon::createFromTimestamp($token->getExpires()),
         ]);
+    }
+
+    /**
+     * Notify application about refreshed athlete.
+     *
+     * @param \App\Strava\Models\Athlete $athlete
+     */
+    protected function notify(Athlete $athlete): void
+    {
+        event(new TokenRefreshed($athlete));
     }
 }

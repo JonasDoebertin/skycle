@@ -2,7 +2,7 @@
 
 namespace App\Darksky\Models;
 
-use App\Darksky\Components\ConditionConverter;
+use App\Darksky\Components\Converter;
 use App\Strava\Models\Activity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,11 +55,11 @@ class Condition extends Model
 
     public function toEmoji(): string
     {
-        return app(ConditionConverter::class)->toEmoji($this);
+        return app(Converter::class)->toEmoji($this);
     }
 
     public function toSummary(): string
     {
-        return app(ConditionConverter::class)->toSummary($this);
+        return app(Converter::class)->toSummary($this);
     }
 }

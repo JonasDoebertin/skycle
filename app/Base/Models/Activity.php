@@ -27,8 +27,8 @@ abstract class Activity extends Model
         'end_time',
         'end_longitude',
         'end_latitude',
-        'fetched_at',
-        'decorated_at',
+        'state',
+        'state_updated_at',
     ];
 
     /**
@@ -39,10 +39,9 @@ abstract class Activity extends Model
     protected $dates = [
         'start_time',
         'end_time',
-        'fetched_at',
-        'decorated_at',
         'created_at',
         'updated_at',
+        'state_updated_at',
     ];
 
     /**
@@ -83,25 +82,5 @@ abstract class Activity extends Model
     public function condition(): HasOne
     {
         return $this->hasOne(Condition::class);
-    }
-
-    /**
-     * Check whether the activity was already fetched from Strava.
-     *
-     * @return bool
-     */
-    public function isFetched(): bool
-    {
-        return $this->fetched_at !== null;
-    }
-
-    /**
-     * Check whether the activity was already decorated and sent to Strava.
-     *
-     * @return bool
-     */
-    public function isDecorated(): bool
-    {
-        return $this->decorated_at !== null;
     }
 }

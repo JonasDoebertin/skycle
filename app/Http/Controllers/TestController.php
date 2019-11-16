@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Darksky\Components\ConditionFetcher;
-use App\Strava\Jobs\DecorateActivity;
+use App\Darksky\Components\Fetcher;
+use App\Strava\Jobs\SendActivity;
 use App\Strava\Jobs\FetchActivity;
 use App\Strava\Models\Activity;
 use App\Strava\Models\Athlete;
@@ -11,16 +11,16 @@ use App\Strava\Models\Athlete;
 class TestController extends Controller
 {
     /**
-     * @var \App\Darksky\Components\ConditionFetcher
+     * @var \App\Darksky\Components\Fetcher
      */
     protected $darkSkyFetcher;
 
     /**
      * TestController constructor.
      *
-     * @param \App\Darksky\Components\ConditionFetcher $darkSkyFetcher
+     * @param \App\Darksky\Components\Fetcher $darkSkyFetcher
      */
-    public function __construct(ConditionFetcher $darkSkyFetcher)
+    public function __construct(Fetcher $darkSkyFetcher)
     {
         $this->darkSkyFetcher = $darkSkyFetcher;
     }
@@ -32,7 +32,7 @@ class TestController extends Controller
 
     public function decorate()
     {
-        DecorateActivity::dispatchNow(Activity::first());
+        SendActivity::dispatchNow(Activity::first());
     }
 
     public function weather()

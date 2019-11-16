@@ -44,6 +44,10 @@ return [
 
     'darksky' => [
         'key' => env('DARK_SKY_KEY'),
+        'ratelimit' => [
+            'allow' => 1000,
+            'every' => 24 * 60 * 60,
+        ],
     ],
 
 ];

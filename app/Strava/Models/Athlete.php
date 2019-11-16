@@ -67,7 +67,7 @@ class Athlete extends Model
      *
      * @return bool
      */
-    public function isExpired(): bool
+    public function tokenHasExpired(): bool
     {
         return $this->expires_at->isPast();
     }
