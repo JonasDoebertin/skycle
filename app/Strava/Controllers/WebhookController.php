@@ -37,6 +37,7 @@ class WebhookController extends Controller
             $this->saveActivity($request);
         }
 
+        // TODO: implement deauthorization
 //        else if ($this->deautorizesAthlete($request)) {
 //            $this->deauthorizeAthlete($request);
 //        }
