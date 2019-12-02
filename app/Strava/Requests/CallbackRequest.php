@@ -17,7 +17,7 @@ class CallbackRequest extends FormRequest
             'object_type'     => 'required|string|in:activity,athlete',
             'object_id'       => 'required|integer',
             'aspect_type'     => 'required|string|in:create,update,delete',
-            'owner_id'        => 'required|integer|exists:strava_athletes,foreign_id',
+            'owner_id'        => 'required|integer',
             'subscription_id' => 'required|integer',
             'event_time'      => 'required|integer',
         ];
@@ -32,5 +32,16 @@ class CallbackRequest extends FormRequest
     {
         return $this->get('object_type') === 'activity'
             && in_array($this->get('aspect_type'), ['create', 'update']);
+    }
+
+    /**
+     * Check whether this request deauthorizes an athlete.
+     *
+     * @return bool
+     */
+    public function deautorizesAthlete(): bool
+    {
+        return $this->get('object_type') === 'athlete'
+            && in_array($this->get('aspect_type'), ['delete']);
     }
 }

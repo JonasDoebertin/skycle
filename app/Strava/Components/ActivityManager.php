@@ -3,7 +3,6 @@
 namespace App\Strava\Components;
 
 use App\Strava\Exceptions\ActivityAlreadyExistsException;
-use App\Strava\Exceptions\UnknownAthleteException;
 use App\Strava\Models\Activity;
 use App\Strava\Models\Athlete;
 use App\Strava\States\Activity\Pruned;
@@ -26,25 +25,20 @@ class ActivityManager
     /**
      * Store a new activity.
      *
+     * @param \App\Strava\Models\Athlete $athlete
      * @param int $foreignId
-     * @param int $ownerId
      * @return \App\Strava\Models\Activity
      * @throws \App\Strava\Exceptions\ActivityAlreadyExistsException
-     * @throws \App\Strava\Exceptions\UnknownAthleteException
      */
-    public function store(int $foreignId, int $ownerId): Activity
+    public function store(Athlete $athlete, int $foreignId): Activity
     {
         if ($this->has($foreignId)) {
             throw ActivityAlreadyExistsException::create($foreignId);
         }
 
-        if (! $owner = Athlete::findByForeignId($ownerId)) {
-            throw UnknownAthleteException::create($ownerId);
-        }
-
-        return tap(new Activity(), function (Activity $activity) use ($foreignId, $owner) {
+        return tap(new Activity(), function (Activity $activity) use ($foreignId, $athlete) {
             $activity->foreign_id = $foreignId;
-            $activity->athlete()->associate($owner);
+            $activity->athlete()->associate($athlete);
             $activity->save();
         });
     }

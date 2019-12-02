@@ -4,12 +4,20 @@ namespace App\Strava\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Strava\Components\ActivityManager;
+use App\Strava\Components\AthleteManager;
 use App\Strava\Events\ActivityCreated;
+use App\Strava\Events\AthleteDeauthorized;
+use App\Strava\Models\Athlete;
 use App\Strava\Requests\CallbackRequest;
 use Illuminate\Support\Facades\Response;
 
 class WebhookController extends Controller
 {
+    /**
+     * @var \App\Strava\Components\AthleteManager
+     */
+    protected $athletes;
+
     /**
      * @var \App\Strava\Components\ActivityManager
      */
@@ -18,11 +26,13 @@ class WebhookController extends Controller
     /**
      * WebhookController constructor.
      *
+     * @param \App\Strava\Components\AthleteManager $athletes
      * @param \App\Strava\Components\ActivityManager $activities
      */
-    public function __construct(ActivityManager $activities)
+    public function __construct(AthleteManager $athletes, ActivityManager $activities)
     {
         $this->activities = $activities;
+        $this->athletes = $athletes;
     }
 
     /**
@@ -33,14 +43,21 @@ class WebhookController extends Controller
      */
     public function __invoke(CallbackRequest $request)
     {
-        if ($request->reportsActivity() && ! $this->isKnownActivity($request)) {
-            $this->saveActivity($request);
+        if (
+            $request->reportsActivity()
+            && ($athlete = $this->athletes->get($request->get('owner_id')))
+            && ! $this->isKnownActivity($request)
+        ) {
+            $this->saveActivity($request, $athlete);
         }
 
-        // TODO: implement deauthorization
-//        else if ($this->deautorizesAthlete($request)) {
-//            $this->deauthorizeAthlete($request);
-//        }
+        else if (
+            $request->deautorizesAthlete()
+            && ($athlete = $this->athletes->get($request->get('object_id')))
+        ) {
+            $this->athletes->deauthorize($athlete);
+            event(new AthleteDeauthorized($athlete));
+        }
 
         return Response::json([]);
     }
@@ -60,12 +77,12 @@ class WebhookController extends Controller
      * Save a newly reported activity.
      *
      * @param \App\Strava\Requests\CallbackRequest $request
+     * @param \App\Strava\Models\Athlete $athlete
      * @throws \App\Strava\Exceptions\ActivityAlreadyExistsException
-     * @throws \App\Strava\Exceptions\UnknownAthleteException
      */
-    protected function saveActivity(CallbackRequest $request): void
+    protected function saveActivity(CallbackRequest $request, Athlete $athlete): void
     {
-        $activity = $this->activities->store($request->get('object_id'), $request->get('owner_id'));
+        $activity = $this->activities->store($athlete, $request->get('object_id'));
 
         event(new ActivityCreated($activity));
     }

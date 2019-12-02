@@ -85,9 +85,9 @@ class Athlete extends Model
      * Find an instance by its foreign id.
      *
      * @param int $foreignId
-     * @return \App\Strava\Models\Athlete|null
+     * @return \App\Strava\Models\Athlete
      */
-    public static function findByForeignId(int $foreignId): ?self
+    public static function findByForeignId(int $foreignId): self
     {
         return static::query()
             ->where('foreign_id', $foreignId)
