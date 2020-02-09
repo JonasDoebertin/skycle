@@ -17,7 +17,7 @@
         "laravel-mix-tailwind": "^0.1.0",
         "lodash": "^4.17.13",
         "resolve-url-loader": "^2.3.1",
-        "sass": "^1.15.2",
+        "sass": "^1.25.0",
         "sass-loader": "^7.1.0",
         "tailwindcss": "^1.0",
         "tailwindcss-owl": "^2.0.0",
