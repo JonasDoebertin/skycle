@@ -34,7 +34,7 @@ return [
         'key' => env('STRAVA_KEY'),
         'secret' => env('STRAVA_SECRET'),
         'webhooks' => [
-            'endpoint' => 'https://api.strava.com/api/v3/push_subscriptions',
+            'endpoint' => 'https://www.strava.com/api/v3/push_subscriptions',
         ],
         'ratelimit' => [
             'allow' => 600,
