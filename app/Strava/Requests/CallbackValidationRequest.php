@@ -2,12 +2,14 @@
 
 namespace App\Strava\Requests;
 
+use App\Strava\Concerns\HandlesWebhooks;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
 
 class CallbackValidationRequest extends FormRequest
 {
+    use HandlesWebhooks;
+
     /**
      * Determine if the current request is asking for JSON.
      *
@@ -30,15 +32,5 @@ class CallbackValidationRequest extends FormRequest
             'hub_challenge'    => 'required|string',
             'hub_verify_token' => ['required', Rule::in([$this->getVerifyToken()])],
         ];
-    }
-
-    /**
-     * Get the current Strava webhook verification token.
-     *
-     * @return string
-     */
-    protected function getVerifyToken(): string
-    {
-        return Cache::get('strava.webhook.verifyToken', '');
     }
 }

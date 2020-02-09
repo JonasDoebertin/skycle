@@ -2,6 +2,7 @@
 
 namespace App\Strava\Commands;
 
+use App\Strava\Concerns\HandlesWebhooks;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
@@ -9,6 +10,8 @@ use Illuminate\Console\Command;
 
 class VerifyWebhook extends Command
 {
+    use HandlesWebhooks;
+
     /**
      * The name and signature of the console command.
      *
@@ -56,43 +59,6 @@ class VerifyWebhook extends Command
         }
 
         return $this->registered();
-    }
-
-    /**
-     * Make a request to register the webhook.
-     */
-    protected function verifyWebhook(): bool
-    {
-        $response = $this->guzzle->get(config('services.strava.webhooks.endpoint'), [
-            'query' => $this->buildPayload(),
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-            'timeout' => 30,
-        ]);
-
-        $webhooks = json_decode($response->getBody()->getContents());
-
-        foreach ($webhooks as $webhook) {
-            if (($webhook->callback_url ?? '') === route('strava.webhook.invoke')) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Build the webhook registration payload.
-     *
-     * @return array
-     */
-    protected function buildPayload(): array
-    {
-        return [
-            'client_id'     => config('services.strava.key'),
-            'client_secret' => config('services.strava.secret'),
-        ];
     }
 
     /**
