@@ -2,5 +2,5 @@
 
 namespace Deployer;
 
-desc('Register strava webhook');
+desc('Register Strava webhook');
 task('artisan:strava:webhook', artisan('strava:webhook'));

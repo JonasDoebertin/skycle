@@ -9,7 +9,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/basvandorst/stravaphp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/cakephp/chronos" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/deployer/deployer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/deployer/phar-update" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/deployer/recipes" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dmitry-ivanov/dark-sky-api" />
@@ -44,7 +43,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/ui" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/league/flysystem" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/league/oauth2-client" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/lorisleiva/laravel-deployer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mockery/mockery" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/moontoast/math" />
