@@ -64,8 +64,6 @@ class RegisterWebhook extends Command
         return $this->registered();
     }
 
-
-
     /**
      * Exit with a success message.
      *
