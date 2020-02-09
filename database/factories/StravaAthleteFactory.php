@@ -17,6 +17,6 @@ $factory->define(Athlete::class, function (Faker $faker) {
         'profile_picture' => $faker->imageUrl(),
         'refresh_token'   => Str::random('40'),
         'access_token'    => Str::random('40'),
-        'expires_at'      => $faker->dateTime,
+        'expires_at'      => now()->addHour(),
     ];
 });

@@ -34,7 +34,6 @@ class ActivityFetcher
 
         $this->saveDetails($activity, $details);
         $this->transitionToFetchedState($activity);
-        $this->notify($activity);
     }
 
     /**
@@ -69,15 +68,5 @@ class ActivityFetcher
     protected function transitionToFetchedState(Activity $activity): void
     {
         $activity->transitionTo(Fetched::class);
-    }
-
-    /**
-     * Notify application about a newly fetched activity.
-     *
-     * @param \App\Strava\Models\Activity $activity
-     */
-    protected function notify(Activity $activity): void
-    {
-        event(new ActivityFetched($activity));
     }
 }

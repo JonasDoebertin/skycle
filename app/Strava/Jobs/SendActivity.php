@@ -24,7 +24,7 @@ class SendActivity implements ShouldQueue
     /**
      * @var \App\Strava\Models\Activity
      */
-    protected $activity;
+    public $activity;
 
     /**
      * Create a new job instance.

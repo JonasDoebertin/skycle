@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Strava;
 
 use App\Strava\Events\ActivityCreated;
 use App\Strava\Events\AthleteDeauthorized;
@@ -12,8 +12,8 @@ use Tests\TestCase;
 
 class WebhookTest extends TestCase
 {
-    use WithStrava,
-        WithFaker;
+    use WithFaker,
+        WithStrava;
 
     public function setUp(): void
     {

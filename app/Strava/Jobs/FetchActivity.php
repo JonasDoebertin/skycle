@@ -4,6 +4,7 @@ namespace App\Strava\Jobs;
 
 use App\Strava\Components\ActivityFetcher;
 use App\Strava\Concerns\RefreshesTokens;
+use App\Strava\Events\ActivityFetched;
 use App\Strava\Jobs\Middleware\RateLimited;
 use App\Strava\Models\Activity;
 use Illuminate\Bus\Queueable;
@@ -24,7 +25,7 @@ class FetchActivity implements ShouldQueue
     /**
      * @var \App\Strava\Models\Activity
      */
-    protected $activity;
+    public $activity;
 
     /**
      * Create a new job instance.
@@ -67,12 +68,17 @@ class FetchActivity implements ShouldQueue
      */
     public function handle(ActivityFetcher $fetcher): void
     {
+        // Refresh the access token if it has expired
         if ($this->activity->athlete->tokenHasExpired()) {
             $this->refreshTokenAndReschedule($this->activity->athlete, $this->activity);
 
             return;
         }
 
+        // Fetch an activity in detail from Strava
         $fetcher->fetch($this->activity);
+
+        // Notify application about a newly fetched activity
+        event(new ActivityFetched($this->activity));
     }
 }

@@ -19,7 +19,7 @@ class RefreshToken implements ShouldQueue
     /**
      * @var \App\Strava\Models\Activity
      */
-    protected $athlete;
+    public $athlete;
 
     /**
      * Create a new job instance.

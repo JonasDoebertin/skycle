@@ -1,6 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Darksky\Models\Condition;
 use App\Strava\Models\Activity;
 use App\Strava\Models\Athlete;
 use Faker\Generator as Faker;
@@ -11,6 +13,7 @@ $factory->define(Activity::class, function (Faker $faker) {
             return factory(Athlete::class);
         },
         'foreign_id' => $faker->numberBetween(),
+        'state'      => 'reported',
     ];
 });
 
@@ -24,12 +27,16 @@ $factory->state(Activity::class, 'fetched', function (Faker $faker) {
         'end_time'        => $faker->dateTimeBetween('-1 day', 'now'),
         'end_longitude'   => $faker->longitude,
         'end_latitude'    => $faker->latitude,
-        'fetched_at'      => now(),
+        'state'           => 'fetched',
     ];
 });
 
 $factory->state(Activity::class, 'decorated', function ($faker) {
     return [
-        'decorated_at' => now(),
+        'state' => 'decorated',
     ];
+});
+
+$factory->afterCreatingState(Activity::class, 'decorated', function (Activity $activity, Faker $faker) {
+    $activity->condition()->save(factory(Condition::class)->make());
 });
