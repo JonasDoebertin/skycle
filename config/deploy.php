@@ -98,7 +98,7 @@ return [
     'options' => [
         'application' => env('APP_NAME', 'Laravel'),
         'repository' => 'git@github.com:JonasDoebertin/skycle.git',
-        'php_fpm_service' => 'php7.3-fpm',
+        'php_fpm_service' => 'php7.4-fpm',
     ],
 
     /*

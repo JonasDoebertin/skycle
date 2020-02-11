@@ -2,15 +2,16 @@
 
 namespace App\Strava\Commands;
 
+use App\Strava\Concerns\HandlesWebhooks;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class RegisterWebhook extends Command
 {
+    use HandlesWebhooks;
+
     /**
      * The name and signature of the console command.
      *
@@ -50,53 +51,41 @@ class RegisterWebhook extends Command
     public function handle()
     {
         try {
+            if ($this->verifyWebhook()) {
+                return $this->verified();
+            }
+
+            $this->deregisterWebhooks();
             $this->registerWebhook();
         } catch (TransferException $e) {
-            return $this->failure($e);
+            return $this->failed($e);
         }
 
-        return $this->success();
+        return $this->registered();
     }
 
     /**
-     * Make a request to register the webhook.
-     */
-    protected function registerWebhook(): void
-    {
-        $this->guzzle->post(config('services.strava.webhooks.endpoint'), [
-            'form_params' => $this->buildPayload(),
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-            'timeout' => 30,
-        ]);
-    }
-
-    /**
-     * Build the webhook registration payload.
+     * Exit with a success message.
      *
-     * @return array
+     * @return int
      */
-    protected function buildPayload(): array
+    protected function verified(): int
     {
-        return [
-            'client_id'     => config('services.strava.key'),
-            'client_secret' => config('services.strava.secret'),
-            'callback_url'  => route('strava.webhook.validation'),
-            'verify_token'  => $this->getVerifyToken(),
-        ];
+        $this->info('Successfully verified Strava webhook.');
+
+        return 0;
     }
 
     /**
-     * Get the current verify token.
+     * Exit with a success message.
      *
-     * @return string
+     * @return int
      */
-    protected function getVerifyToken(): string
+    protected function registered(): int
     {
-        return Cache::rememberForever('strava.webhook.verifyToken', function (): string {
-            return Str::random('64');
-        });
+        $this->info('Successfully registered Strava webhook.');
+
+        return 0;
     }
 
     /**
@@ -105,24 +94,11 @@ class RegisterWebhook extends Command
      * @param \Exception $e
      * @return int
      */
-    protected function failure(Exception $e): int
+    protected function failed(Exception $e): int
     {
         $this->error('Could not register Strava webhook.');
         $this->line($e->getMessage());
-        $this->line($e->getResponse()->getBody()->getContents());
 
         return 1;
-    }
-
-    /**
-     * Exit with a success message.
-     *
-     * @return int
-     */
-    protected function success(): int
-    {
-        $this->info('Successfully registered Strava webhook.');
-
-        return 0;
     }
 }
