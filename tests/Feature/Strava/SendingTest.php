@@ -26,10 +26,12 @@ class SendingTest extends TestCase
 
     public function testJobGetsDispatched()
     {
-        Queue::fake();
+        $this->markTestIncomplete();
 
-        $activity = $this->hasActivity('decorated');
-        event(new ConditionFetched($activity));
+//        Queue::fake();
+//
+//        $activity = $this->hasActivity('decorated');
+//        event(new ConditionFetched($activity));
 
 //        Queue::assertPushedOn('strava', SendActivity::class, function (SendActivity $job) use ($activity) {
 //            return $job->activity->is($activity);

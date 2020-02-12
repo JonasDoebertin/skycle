@@ -3,7 +3,7 @@
 namespace App\Strava\Jobs;
 
 use App\Strava\Components\ActivitySender;
-use App\Strava\Concerns\RefreshesTokens;
+use App\Strava\Components\Redispatcher;
 use App\Strava\Jobs\Middleware\RateLimited;
 use App\Strava\Models\Activity;
 use Illuminate\Bus\Queueable;
@@ -18,7 +18,6 @@ class SendActivity implements ShouldQueue
     use Dispatchable,
         InteractsWithQueue,
         Queueable,
-        RefreshesTokens,
         SerializesModels;
 
     /**
@@ -60,15 +59,17 @@ class SendActivity implements ShouldQueue
     /**
      * Execute the job.
      *
+     * @param \App\Strava\Components\Redispatcher $redispatcher
      * @param \App\Strava\Components\ActivitySender $sender
      * @return void
-     * @throws \Strava\API\Exception
      * @throws \Spatie\ModelStates\Exceptions\CouldNotPerformTransition
+     * @throws \Strava\API\Exception
      */
-    public function handle(ActivitySender $sender): void
+    public function handle(Redispatcher $redispatcher, ActivitySender $sender): void
     {
+        // Refresh the access token if it has expired
         if ($this->activity->athlete->tokenHasExpired()) {
-            $this->refreshTokenAndReschedule($this->activity->athlete, $this->activity);
+            $redispatcher->redispatch(self::class, $this->activity);
 
             return;
         }

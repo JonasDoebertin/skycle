@@ -14,7 +14,10 @@ use Illuminate\Support\Carbon;
 
 class RefreshToken implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable,
+        InteractsWithQueue,
+        Queueable,
+        SerializesModels;
 
     /**
      * @var \App\Strava\Models\Activity
@@ -57,6 +60,7 @@ class RefreshToken implements ShouldQueue
      *
      * @param \App\Strava\Components\TokenRefresher $refresher
      * @return void
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
     public function handle(TokenRefresher $refresher): void
     {

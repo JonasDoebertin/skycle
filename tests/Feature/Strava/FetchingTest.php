@@ -3,6 +3,7 @@
 namespace Tests\Feature\Strava;
 
 use App\Strava\Components\ActivityFetcher;
+use App\Strava\Components\Redispatcher;
 use App\Strava\Events\ActivityCreated;
 use App\Strava\Events\ActivityFetched;
 use App\Strava\Jobs\FetchActivity;
@@ -55,7 +56,20 @@ class FetchingTest extends TestCase
     {
         $this->markTestIncomplete();
 
-        // Test that when called with an expired token a new job chain to
-        // refresh token and retry fetch is dispatched
+        $this->mock(Redispatcher::class, function (MockInterface $mock) {
+            $mock->shouldReceive('redispatch')->once();
+        });
+
+        $this->mock(ActivityFetcher::class, function (MockInterface $mock) {
+            $mock->shouldNotReceive('fetch');
+        });
+
+        $activity = $this->hasActivity();
+        $activity->athlete->update([
+            'expires_at' => now()->subDay(),
+        ]);
+        FetchActivity::dispatch($activity);
+
+        // TODO: Unit test to make sure Redispatcher actually redispatches the job
     }
 }

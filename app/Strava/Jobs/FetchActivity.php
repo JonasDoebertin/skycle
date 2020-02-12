@@ -3,7 +3,7 @@
 namespace App\Strava\Jobs;
 
 use App\Strava\Components\ActivityFetcher;
-use App\Strava\Concerns\RefreshesTokens;
+use App\Strava\Components\Redispatcher;
 use App\Strava\Events\ActivityFetched;
 use App\Strava\Jobs\Middleware\RateLimited;
 use App\Strava\Models\Activity;
@@ -19,7 +19,6 @@ class FetchActivity implements ShouldQueue
     use Dispatchable,
         InteractsWithQueue,
         Queueable,
-        RefreshesTokens,
         SerializesModels;
 
     /**
@@ -61,16 +60,17 @@ class FetchActivity implements ShouldQueue
     /**
      * Execute the job.
      *
+     * @param \App\Strava\Components\Redispatcher $redispatcher
      * @param \App\Strava\Components\ActivityFetcher $fetcher
      * @return void
-     * @throws \Strava\API\Exception
      * @throws \Spatie\ModelStates\Exceptions\CouldNotPerformTransition
+     * @throws \Strava\API\Exception
      */
-    public function handle(ActivityFetcher $fetcher): void
+    public function handle(Redispatcher $redispatcher, ActivityFetcher $fetcher): void
     {
         // Refresh the access token if it has expired
         if ($this->activity->athlete->tokenHasExpired()) {
-            $this->refreshTokenAndReschedule($this->activity->athlete, $this->activity);
+            $redispatcher->redispatch(self::class, $this->activity);
 
             return;
         }

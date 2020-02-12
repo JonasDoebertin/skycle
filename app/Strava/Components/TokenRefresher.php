@@ -15,6 +15,7 @@ class TokenRefresher
      * Refresh an athletes api access.
      *
      * @param \App\Strava\Models\Athlete $athlete
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
     public function refresh(Athlete $athlete): void
     {
@@ -31,6 +32,7 @@ class TokenRefresher
      * Request and store a fresh access token.
      *
      * @param \App\Strava\Models\Athlete $athlete
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
     protected function refreshToken(Athlete $athlete): void
     {
