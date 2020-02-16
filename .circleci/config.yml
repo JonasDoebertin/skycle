@@ -11,14 +11,19 @@ jobs:
       - checkout
 
       - run:
-          name: Setup container
+          name: Setup PHP
           command: |
               sudo apt update
-              sudo apt install -y redis-tools
               sudo docker-php-ext-install -j$(nproc) zip pcntl
               sudo pecl install --force --onlyreqdeps redis
               sudo docker-php-ext-enable redis
               sudo composer self-update --no-interaction
+
+      - run:
+          name: Install Dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+              DOCKERIZE_VERSION: v0.6.1
 
       - restore_cache:
           keys:
@@ -50,7 +55,7 @@ jobs:
 
       - run:
           name: Waiting for Redis server
-          command: while ! redis-cli ping 2>/dev/null ; do sleep 1 ; done
+          command: dockerize -wait tcp://localhost:6379 -timeout 1m
 
       - run:
           name: Configure application
