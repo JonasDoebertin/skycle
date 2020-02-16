@@ -1,0 +1,59 @@
+# PHP CircleCI 2.0 configuration file
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.4-node-browsers
+
+    steps:
+      - checkout
+
+      - run:
+          name: Setup container
+          command: |
+              sudo apt update
+              sudo docker-php-ext-install -j$(nproc) zip pcntl
+              sudo composer self-update --no-interaction
+
+      - restore_cache:
+          keys:
+            - v1-composer-{{ checksum "composer.lock" }}
+            - v1-composer-
+      - run:
+          name: Install composer dependencies
+          command: composer install --no-interaction --no-scripts --no-suggest --prefer-dist
+      - save_cache:
+          key: v1-composer-{{ checksum "composer.lock" }}
+          paths:
+            - ./vendor
+
+      - restore_cache:
+          keys:
+            - v1-node-{{ checksum "package-lock.json" }}
+            - v1-node-
+      - run:
+          name: Install npm dependencies
+          command: npm install
+      - save_cache:
+          key: v1-node-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+
+      - run:
+          name: Prepare database
+          command: touch storage/testing.sqlite
+
+      - run:
+          name: Configure application
+          command: |
+              php -r "file_exists('.env') || copy('.env.example', '.env');"
+              php artisan key:generate
+#              php artisan optimize
+
+      - run:
+          name: Run PHPUnit tests
+          command: ./vendor/bin/phpunit --log-junit ./test-results/phpunit/junit.xml
+
+      - store_test_results:
+          path: ./test-results
