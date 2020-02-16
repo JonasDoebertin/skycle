@@ -1,0 +1,42 @@
+# PHP CircleCI 2.0 configuration file
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.4-node-browsers
+
+    steps:
+      - checkout
+
+      - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
+      - run: sudo docker-php-ext-install zip
+
+      # prepare composer dependencies
+      - restore_cache:
+          keys:
+            - v1-composer-{{ checksum "composer.lock" }}
+            - v1-composer-
+      - run: composer install --no-interaction --no-scripts --no-suggest --prefer-dist
+      - save_cache:
+          key: v1-composer-{{ checksum "composer.lock" }}
+          paths:
+            - ./vendor
+
+      # prepare npm dependencies
+      - restore_cache:
+          keys:
+            - v1-node-{{ checksum "package-lock.json" }}
+            - v1-node-
+      - run: yarn install
+      - save_cache:
+          key: v1-node-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+
+      # prepare the database
+      - run: touch storage/testing.sqlite
+#      - run: php artisan migrate --env=testing --database=sqlite_testing --force
+
+      # run tests
+      - run: ./vendor/bin/phpunit
