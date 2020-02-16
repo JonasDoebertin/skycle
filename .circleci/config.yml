@@ -42,7 +42,7 @@ jobs:
 
       - run:
           name: Prepare database
-          command: touch storage/testing.sqlite
+          command: touch database/testing.sqlite
 
       - run:
           name: Configure application

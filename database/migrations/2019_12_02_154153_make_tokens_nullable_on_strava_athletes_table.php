@@ -26,9 +26,6 @@ class MakeTokensNullableOnStravaAthletesTable extends Migration
      */
     public function down()
     {
-        Schema::table('strava_athletes', function (Blueprint $table) {
-            $table->string('refresh_token')->change();
-            $table->string('access_token')->change();
-        });
+        //
     }
 }

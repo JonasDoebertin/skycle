@@ -43,6 +43,6 @@ class CreateStravaActivitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('strava_activities');
+        //
     }
 }
