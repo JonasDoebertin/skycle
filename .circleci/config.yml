@@ -13,7 +13,9 @@ jobs:
           name: Setup container
           command: |
               sudo apt update
-              sudo docker-php-ext-install -j$(nproc) zip pcntl redis
+              sudo docker-php-ext-install -j$(nproc) zip pcntl
+              sudo pecl install --force --onlyreqdeps redis
+              sudo docker-php-ext-enable redis
               sudo composer self-update --no-interaction
 
       - restore_cache:
