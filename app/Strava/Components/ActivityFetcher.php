@@ -4,7 +4,6 @@ namespace App\Strava\Components;
 
 use App\Strava\Concerns\ConnectsToStrava;
 use App\Strava\Concerns\ParsesTimezones;
-use App\Strava\Events\ActivityFetched;
 use App\Strava\Models\Activity;
 use App\Strava\States\Activity\Fetched;
 use App\Strava\States\Activity\Reported;

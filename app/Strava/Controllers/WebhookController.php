@@ -49,9 +49,7 @@ class WebhookController extends Controller
             && ! $this->isKnownActivity($request)
         ) {
             $this->saveActivity($request, $athlete);
-        }
-
-        else if (
+        } elseif (
             $request->deautorizesAthlete()
             && ($athlete = $this->athletes->get($request->get('object_id')))
         ) {
