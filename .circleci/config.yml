@@ -14,6 +14,7 @@ jobs:
           command: |
               sudo apt update
               sudo docker-php-ext-install -j$(nproc) zip pcntl
+              sudo composer self-update --no-interaction
 
       - restore_cache:
           keys:
@@ -48,7 +49,11 @@ jobs:
           command: |
               php -r "file_exists('.env') || copy('.env.example', '.env');"
               php artisan key:generate
+              php artisan optimize
 
       - run:
           name: Run PHPUnit tests
-          command: ./vendor/bin/phpunit
+          command: ./vendor/bin/phpunit --log-junit ./test-results/phpunit/junit.xml
+
+      - store_test_results:
+          path: ./test-results
