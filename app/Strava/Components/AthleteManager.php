@@ -28,7 +28,8 @@ class AthleteManager
     {
         $athlete->update([
             'refresh_token' => null,
-            'access_token' => null,
+            'access_token'  => null,
+            'expires_at'    => null,
         ]);
     }
 }

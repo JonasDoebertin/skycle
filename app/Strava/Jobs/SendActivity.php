@@ -4,6 +4,7 @@ namespace App\Strava\Jobs;
 
 use App\Strava\Components\ActivitySender;
 use App\Strava\Components\Redispatcher;
+use App\Strava\Events\ActivitySent;
 use App\Strava\Jobs\Middleware\RateLimited;
 use App\Strava\Models\Activity;
 use Illuminate\Bus\Queueable;
@@ -75,5 +76,8 @@ class SendActivity implements ShouldQueue
         }
 
         $sender->send($this->activity);
+
+        // Notify application about a newly sent activity
+        event(new ActivitySent($this->activity));
     }
 }

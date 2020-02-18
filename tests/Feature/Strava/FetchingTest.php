@@ -19,11 +19,10 @@ class FetchingTest extends TestCase
     use WithFaker,
         WithStrava;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
+    /**
+     * Assert that for a newly created activity:
+     * - the appropriate job gets dispatched on the correct queue
+     */
     public function testJobGetsDispatched()
     {
         Queue::fake();
@@ -36,30 +35,38 @@ class FetchingTest extends TestCase
         });
     }
 
+    /**
+     * Assert that after dispatching the job for a newly created activity:
+     * - the appropriate event gets fired
+     */
     public function testJobCallsFetcherAndFiresEvent()
     {
-        Event::fake();
+        Event::fake([ActivityFetched::class]);
 
         $this->mock(ActivityFetcher::class, function (MockInterface $mock) {
             $mock->shouldReceive('fetch')->once();
         });
 
         $activity = $this->hasActivity();
-        FetchActivity::dispatch($activity);
+        event(new ActivityCreated($activity));
 
         Event::assertDispatched(ActivityFetched::class, function (ActivityFetched $event) use ($activity) {
             return $event->activity->is($activity);
         });
+
+        // TODO: Unit test fetcher
     }
 
+    /**
+     * Assert that when dispatching the job for a newly created activity with an expired token:
+     * - the fetcher doesn't get called
+     * - the re-dispatcher gets called
+     */
     public function testJobsGetsRescheduledForExpiredTokens()
     {
-        $this->markTestIncomplete();
-
         $this->mock(Redispatcher::class, function (MockInterface $mock) {
             $mock->shouldReceive('redispatch')->once();
         });
-
         $this->mock(ActivityFetcher::class, function (MockInterface $mock) {
             $mock->shouldNotReceive('fetch');
         });

@@ -6,7 +6,6 @@ use App\Strava\Events\ActivityCreated;
 use App\Strava\Events\AthleteDeauthorized;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Queue;
 use Tests\Concerns\WithStrava;
 use Tests\TestCase;
 
@@ -14,14 +13,6 @@ class WebhookTest extends TestCase
 {
     use WithFaker,
         WithStrava;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Event::fake();
-        Queue::fake();
-    }
 
     /**
      * Assert that a newly reported activity:
@@ -31,6 +22,8 @@ class WebhookTest extends TestCase
      */
     public function testNewActivitiesAreHandled(): void
     {
+        Event::fake([ActivityCreated::class]);
+
         $athlete = $this->hasAthlete();
 
         $response = $this->postJson(route('strava.webhook.invoke'), [
@@ -57,10 +50,12 @@ class WebhookTest extends TestCase
     /**
      * Assert that a newly reported activity for an unknown athlete:
      * - results in a return status code 200
-     * - does not fires the appropriate event
+     * - does not fire the appropriate event
      */
     public function testNewActivitiesForUnknownAthletesAreHandled()
     {
+        Event::fake([ActivityCreated::class]);
+
         $response = $this->postJson(route('strava.webhook.invoke'), [
             'object_type'     => 'activity',
             'object_id'       => $activityId = $this->faker->numberBetween(),
@@ -87,6 +82,8 @@ class WebhookTest extends TestCase
      */
     public function testKnownActivitiesAreHandled()
     {
+        Event::fake([ActivityCreated::class]);
+
         $activity = $this->hasActivity();
 
         $response = $this->postJson(route('strava.webhook.invoke'), [
@@ -111,6 +108,7 @@ class WebhookTest extends TestCase
      */
     public function testKnownActivitiesForUnknownAthletesAreHandled()
     {
+        Event::fake([ActivityCreated::class]);
         $activity = $this->hasActivity();
 
         $response = $this->postJson(route('strava.webhook.invoke'), [
@@ -132,8 +130,16 @@ class WebhookTest extends TestCase
         ]);
     }
 
+    /**
+     * Assert that de-authorization requests for an athlete:
+     * - results in a return status code 200
+     * - does fire the appropriate event
+     * - revokes the athletes tokens in the database
+     */
     public function testDeauthorizationsAreHandled(): void
     {
+        Event::fake([AthleteDeauthorized::class]);
+
         $athlete = $this->hasAthlete();
 
         $response = $this->postJson(route('strava.webhook.invoke'), [
@@ -155,14 +161,21 @@ class WebhookTest extends TestCase
             'id'            => $athlete->id,
             'refresh_token' => null,
             'access_token'  => null,
+            'expires_at'    => null,
         ]);
     }
 
+    /**
+     * Assert that de-authorization requests for an non-existent athlete:
+     * - results in a return status code 200
+     * - does not fire the appropriate event
+     */
     public function testDeauthorizationsForUnknownAthletesAreHandled(): void
     {
+        Event::fake([AthleteDeauthorized::class]);
+
         $foreignId = $this->faker->numberBetween();
 
-        // TODO: Validates that deauthorization requests actually look like this
         $response = $this->postJson(route('strava.webhook.invoke'), [
             'object_type'     => 'athlete',
             'object_id'       => $foreignId,
