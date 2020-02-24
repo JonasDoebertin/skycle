@@ -54,4 +54,9 @@ trait WithStrava
 
         return $this->make(Activity::class, $state);
     }
+
+    public function activityResponse(): array
+    {
+        return [];
+    }
 }

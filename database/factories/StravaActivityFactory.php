@@ -17,6 +17,10 @@ $factory->define(Activity::class, function (Faker $faker) {
     ];
 });
 
+$factory->state(Activity::class, 'reported', function () {
+    return [];
+});
+
 $factory->state(Activity::class, 'fetched', function (Faker $faker) {
     return [
         'name'            => $faker->words(4, true),
