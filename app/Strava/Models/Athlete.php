@@ -95,6 +95,27 @@ class Athlete extends Model
     }
 
     /**
+     * Check whether this account is paused.
+     *
+     * @return bool
+     */
+    public function isPaused(): bool
+    {
+        // TODO: Implement pausing feature.
+        return false;
+    }
+
+    /**
+     * Check whether the refresh token is empty, thus the account is disconnected.
+     *
+     * @return bool
+     */
+    public function isDisconnected(): bool
+    {
+        return $this->refresh_token === null;
+    }
+
+    /**
      * Check whether the access token has expired.
      *
      * @return bool
@@ -103,4 +124,6 @@ class Athlete extends Model
     {
         return $this->expires_at->isPast();
     }
+
+
 }

@@ -17,7 +17,7 @@ trait HandlesOAuth
         $oauth = new OAuth([
             'clientId'     => config('services.strava.key'),
             'clientSecret' => config('services.strava.secret'),
-            'redirectUri'  => route('strava.oauth.callback'),
+            'redirectUri'  => route('app.strava.oauth.callback'),
         ]);
 
         return $oauth->getAuthorizationUrl([
@@ -37,7 +37,7 @@ trait HandlesOAuth
         $oauth = new OAuth([
             'clientId'     => config('services.strava.key'),
             'clientSecret' => config('services.strava.secret'),
-            'redirectUri'  => route('strava.oauth.callback'),
+            'redirectUri'  => route('app.strava.oauth.callback'),
         ]);
 
         return $oauth->getAccessToken('authorization_code', [
@@ -55,7 +55,7 @@ trait HandlesOAuth
         $oauth = new OAuth([
             'clientId'     => config('services.strava.key'),
             'clientSecret' => config('services.strava.secret'),
-            'redirectUri'  => route('strava.oauth.callback'),
+            'redirectUri'  => route('app.strava.oauth.callback'),
         ]);
 
         return $oauth->getAccessToken('refresh_token', [

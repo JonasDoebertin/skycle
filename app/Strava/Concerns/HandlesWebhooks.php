@@ -23,7 +23,7 @@ trait HandlesWebhooks
         $webhooks = json_decode($response->getBody()->getContents());
 
         foreach ($webhooks as $webhook) {
-            if (($webhook->callback_url ?? '') === route('strava.webhook.invoke')) {
+            if (($webhook->callback_url ?? '') === route('app.strava.webhook.invoke')) {
                 return true;
             }
         }
@@ -102,7 +102,7 @@ trait HandlesWebhooks
     protected function buildRegistrationRequestPayload(): array
     {
         return $this->buildBaseRequestPayload() + [
-            'callback_url'  => route('strava.webhook.validation'),
+            'callback_url'  => route('app.strava.webhook.validation'),
             'verify_token'  => $this->getVerifyToken(),
         ];
     }

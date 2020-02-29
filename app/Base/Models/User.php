@@ -67,6 +67,15 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'gravatar_url',
+    ];
+
+    public function getGravatarUrlAttribute()
+    {
+        return 'https://www.gravatar.com/avatar/' . md5(trim($this->email));
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

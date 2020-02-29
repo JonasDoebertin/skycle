@@ -29,7 +29,7 @@ class CallbackController extends Controller
         $this->saveAthlete($token);
 
         return redirect()
-            ->route('home');
+            ->route('app.dashboard');
     }
 
     /**
