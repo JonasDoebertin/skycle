@@ -47,20 +47,11 @@ class Athlete extends Model
     protected $table = 'strava_athletes';
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that aren't mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'user_id',
-        'foreign_id',
-        'first_name',
-        'last_name',
-        'profile_picture',
-        'refresh_token',
-        'access_token',
-        'expires_at',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be cast to native types.
@@ -70,6 +61,7 @@ class Athlete extends Model
     protected $dates = [
         'created_at',
         'updated_at',
+        'paused_at',
         'expires_at',
     ];
 
@@ -101,8 +93,7 @@ class Athlete extends Model
      */
     public function isPaused(): bool
     {
-        // TODO: Implement pausing feature.
-        return false;
+        return $this->paused_at !== null;
     }
 
     /**

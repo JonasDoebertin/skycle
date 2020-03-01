@@ -17,6 +17,12 @@
 
     <main>
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            @if (flash()->message)
+                <div class="text-sm border border-t-8 rounded px-3 py-4 mb-4 {{ flash()->class }}" role="alert">
+                    {{ flash()->message }}
+                </div>
+            @endif
+
             @yield('content')
         </div>
     </main>

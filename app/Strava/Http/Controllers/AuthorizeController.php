@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Strava\Controllers;
+namespace App\Strava\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Strava\Concerns\HandlesOAuth;

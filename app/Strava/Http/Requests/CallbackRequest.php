@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Strava\Requests;
+namespace App\Strava\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

@@ -3,5 +3,6 @@
         <h2 class="text-lg leading-6 font-semibold text-gray-900">
             @yield('title')
         </h2>
+        @yield('meta')
     </div>
 </header>

@@ -36,11 +36,17 @@ Route::get('/settings', 'HomeController@index')->name('app.settings');
 */
 
 Route::prefix('strava')
-    ->namespace('\App\Strava\Controllers')
+    ->namespace('\App\Strava\Http\Controllers')
     ->group(function () {
 
-        Route::get('athlete/{athlete}', 'SettingsController')
-            ->name('app.strava.athlete');
+        Route::get('athlete/{athlete}', 'SettingsController@show')
+            ->name('app.strava.athlete.show');
+
+        Route::post('athlete/{athlete}', 'SettingsController@update')
+            ->name('app.strava.athlete.update');
+
+        Route::delete('athlete/{athlete}', 'SettingsController@destroy')
+            ->name('app.strava.athlete.destroy');
 
         Route::get('authorize', 'AuthorizeController')
             ->name('app.strava.oauth.authorize')

@@ -1,14 +1,9 @@
 @extends('layouts.app')
 
+@section('breadcrumb', '')
 @section('title', 'Dashboard')
 
 @section('content')
-
-    @if (flash()->message)
-        <div class="text-sm border border-t-8 rounded px-3 py-4 mb-4 {{ flash()->class }}" role="alert">
-            {{ flash()->message }}
-        </div>
-    @endif
 
     <div class="bg-white shadow overflow-hidden sm:rounded-md">
         <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
@@ -33,7 +28,7 @@
         <ul>
             @foreach ($stravaAccounts as $stravaAccount)
                 <li @if (!$loop->first)class="border-t border-gray-200"@endif>
-                    <a href="{{ route('app.strava.athlete', ['athlete' => $stravaAccount]) }}" class="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out">
+                    <a href="{{ route('app.strava.athlete.show', ['athlete' => $stravaAccount]) }}" class="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out">
                         <div class="flex items-center px-4 py-4 sm:px-6">
                             <div class="min-w-0 flex-1 flex items-center">
                                 <div class="flex-shrink-0 mr-4">
@@ -52,19 +47,7 @@
                                 </div>
                                 <div class="flex-grow"></div>
                                 <div class="flex-shrink-0 mr-4 text-right hidden md:block">
-                                    @if($stravaAccount->isDisconnected())
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-red-100 text-red-800">
-                                            Disconnected
-                                        </span>
-                                    @elseif($stravaAccount->isPaused())
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-gray-100 text-gray-800">
-                                            Paused
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
-                                            Active
-                                        </span>
-                                    @endif
+                                    @include('partials.strava.status', ['athlete' => $stravaAccount])
                                     <div class="mt-2 text-sm leading-5 text-gray-500">
                                         <span>
                                             Added on

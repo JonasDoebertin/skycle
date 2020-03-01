@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Strava\Controllers;
+namespace App\Strava\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Strava\Requests\CallbackValidationRequest;
+use App\Strava\Http\Requests\CallbackValidationRequest;
 use Illuminate\Support\Facades\Response;
 
 class WebhookValidationController extends Controller
 {
     /**
-     * @param \App\Strava\Requests\CallbackValidationRequest $request
+     * @param \App\Strava\Http\Requests\CallbackValidationRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(CallbackValidationRequest $request)
