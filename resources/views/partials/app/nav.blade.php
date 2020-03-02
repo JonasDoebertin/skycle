@@ -12,6 +12,8 @@
 
                         <a href="{{ route('app.dashboard') }}" class="px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('app.dashboard') ? 'text-white bg-indigo-800' : 'text-indigo-200 hover:text-white hover:bg-indigo-600' }} focus:outline-none focus:text-white focus:bg-indigo-600 transition ease-in-out duration-150">Dashboard</a>
 
+                        <a href="{{ route('app.cleaners.index') }}" class="ml-4 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('app.cleaners.index') ? 'text-white bg-indigo-800' : 'text-indigo-200 hover:text-white hover:bg-indigo-600' }} focus:outline-none focus:text-white focus:bg-indigo-600 transition ease-in-out duration-150">Cleaners</a>
+
                         <a href="{{ route('app.settings') }}" class="ml-4 px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('app.settings') ? 'text-white bg-indigo-800' : 'text-indigo-200 hover:text-white hover:bg-indigo-600' }} focus:outline-none focus:text-white focus:bg-indigo-600 transition ease-in-out duration-150">Settings</a>
 
                     </div>
@@ -83,6 +85,8 @@
         <div class="px-2 pt-2 pb-3 sm:px-3">
 
             <a href="{{ route('app.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('app.dashboard') ? 'text-white bg-indigo-800' : 'text-indigo-200 hover:text-white hover:bg-indigo-600' }} focus:outline-none focus:text-white focus:bg-gray-700">Dashboard</a>
+
+            <a href="{{ route('app.cleaners.index') }}" class="mt-1 block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('app.cleaners.index') ? 'text-white bg-indigo-800' : 'text-indigo-200 hover:text-white hover:bg-indigo-600' }} focus:outline-none focus:text-white focus:bg-indigo-600">Cleaners</a>
 
             <a href="{{ route('app.settings') }}" class="mt-1 block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('app.settings') ? 'text-white bg-indigo-800' : 'text-indigo-200 hover:text-white hover:bg-indigo-600' }} focus:outline-none focus:text-white focus:bg-indigo-600">Settings</a>
 
