@@ -7,6 +7,9 @@ module.exports = {
                 sans: ['Inter var', ...defaultTheme.fontFamily.sans],
             },
         },
+        height: {
+            '13': '52px',
+        }
     },
     plugins: [
         require('tailwindcss-owl'),

@@ -77,6 +77,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the users cleaners.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function cleaners(): HasMany
+    {
+        return $this->hasMany(Cleaner::class);
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function stravaAthletes(): HasMany

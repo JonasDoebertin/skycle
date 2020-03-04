@@ -30,6 +30,8 @@ Route::namespace('\App\Http\Controllers\App')
     ->group(function () {
         Route::get('/dashboard', 'DashboardController@index')->name('app.dashboard');
         Route::get('/cleaners', 'CleanersController@index')->name('app.cleaners.index');
+        Route::post('/cleaners', 'CleanersController@store')->name('app.cleaners.store');
+        Route::delete('/cleaners/{cleaner}', 'CleanersController@destroy')->name('app.cleaners.destroy');
         Route::get('/settings', 'DashboardController@index')->name('app.settings');
     });
 
