@@ -2,7 +2,10 @@
 
 namespace App\Strava\Models;
 
+use App\Base\Models\Cleaner;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -71,6 +74,18 @@ class Athlete extends Model
     public function activities(): HasMany
     {
         return $this->hasMany(Activity::class);
+    }
+
+    /**
+     * Get the athletes enabled cleaners.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function cleaners(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Cleaner::class, 'cleaner_strava_athlete', 'strava_athlete_id')
+            ->withTimestamps();
     }
 
     /**

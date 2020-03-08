@@ -2,7 +2,7 @@
 
 namespace App\Strava\Http\Requests;
 
-use App\Strava\Models\Athlete;
+use App\Rules\OwnedCleaner;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAthleteRequest extends FormRequest
@@ -25,7 +25,9 @@ class UpdateAthleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'paused_at' => 'sometimes|nullable|date',
+            'cleaners'   => ['sometimes', 'required', 'nullable', 'array'],
+            'cleaners.*' => ['in:0,1', new OwnedCleaner()],
+            'paused_at'  => 'sometimes|nullable|date',
         ];
     }
 }

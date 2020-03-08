@@ -6,10 +6,10 @@ module.exports = {
             fontFamily: {
                 sans: ['Inter var', ...defaultTheme.fontFamily.sans],
             },
+            spacing: {
+                '13': '3.25rem',
+            }
         },
-        height: {
-            '13': '52px',
-        }
     },
     plugins: [
         require('tailwindcss-owl'),

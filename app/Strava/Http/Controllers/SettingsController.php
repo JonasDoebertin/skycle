@@ -20,7 +20,8 @@ class SettingsController extends Controller
     {
         return view('app.strava.settings')
             ->with([
-                'athlete' => $athlete,
+                'athlete'  => $athlete,
+                'cleaners' => auth()->user()->cleaners()->with('stravaAthletes')->get(),
             ]);
     }
 
@@ -33,7 +34,7 @@ class SettingsController extends Controller
      */
     public function update(UpdateAthleteRequest $request, Athlete $athlete): RedirectResponse
     {
-        $athlete->update($request->validated());
+        $this->updateAthlete($request, $athlete);
 
         flash()->success('Account updated');
 
@@ -53,5 +54,27 @@ class SettingsController extends Controller
         $athlete->delete();
 
         return redirect()->route('app.dashboard');
+    }
+
+    /**
+     * @param \App\Strava\Http\Requests\UpdateAthleteRequest $request
+     * @param \App\Strava\Models\Athlete $athlete
+     */
+    protected function updateAthlete(UpdateAthleteRequest $request, Athlete $athlete): void
+    {
+        // Update associated cleaners
+        if ($request->has('cleaners')) {
+            $ids = collect($request->get('cleaners'))
+                ->filter(function ($value): bool {
+                    return $value === '1';
+                })->map(function ($value, $key) {
+                    return $key;
+                })->values()->toArray();
+
+            $athlete->cleaners()->sync($ids);
+        }
+
+        // Update remaining attributes
+        $athlete->update($request->only('paused_at'));
     }
 }

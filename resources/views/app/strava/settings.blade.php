@@ -17,7 +17,47 @@
 @endsection
 
 @section('content')
-    <div class="bg-white shadow overflow-hidden  sm:rounded-lg">
+    <form class="bg-white overflow-hidden shadow sm:rounded-lg" action="{{ route('app.strava.athlete.update', ['athlete' => $athlete]) }}" method="POST">
+        @csrf
+        <div class="border-b border-gray-200 px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Cleaners
+            </h3>
+            <p class="mt-1 max-w-2xl text-sm leading-5 text-gray-500">
+                Choose which cleaners you want to be enabled for this account.
+            </p>
+        </div>
+
+        <div class="px-4 py-5 sm:p-6">
+            @error('cleaners')
+                <div class="mt-2 text-sm leading-5 text-red-600">{{ $message }}</div>
+            @enderror
+
+            @foreach ($cleaners as $cleaner)
+                <div @if (!$loop->first)class="mt-4"@endif>
+                    <div class="relative flex items-start">
+                        <div class="absolute flex items-center h-5">
+                            <input type="hidden" name="cleaners[{{ $cleaner->id }}]" value="0">
+                            <input id="cleaner-{{ $cleaner->id }}" type="checkbox" name="cleaners[{{ $cleaner->id }}]" value="1" class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" @if ($cleaner->stravaAthletes->contains($athlete)) checked @endif>
+                        </div>
+                        <div class="pl-7 text-sm leading-5">
+                            <label for="cleaner-{{ $cleaner->id }}" class="font-medium text-gray-700">{{ $cleaner->text }}</label>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="bg-gray-50 text-right px-4 py-3 sm:px-6">
+            <span class="inline-flex rounded-md shadow-sm">
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                    Save
+                </button>
+            </span>
+        </div>
+    </form>
+
+    <div class="mt-8 bg-white shadow overflow-hidden  sm:rounded-lg">
         <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900">
                 Danger Zone
