@@ -4,7 +4,6 @@ namespace App\Strava\Models;
 
 use App\Base\Models\Cleaner;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -130,6 +129,4 @@ class Athlete extends Model
     {
         return $this->expires_at->isPast();
     }
-
-
 }

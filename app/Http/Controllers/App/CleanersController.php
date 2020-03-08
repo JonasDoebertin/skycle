@@ -21,8 +21,6 @@ class CleanersController extends Controller
 
     /**
      * Show the application dashboard.
-     *
-     *
      */
     public function index()
     {
