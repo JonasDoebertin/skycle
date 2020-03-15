@@ -26,7 +26,7 @@ class WebhookTest extends TestCase
 
         $athlete = $this->hasAthlete();
 
-        $response = $this->postJson(route('strava.webhook.invoke'), [
+        $response = $this->postJson(route('app.strava.webhook.invoke'), [
             'object_type'     => 'activity',
             'object_id'       => $activityId = $this->faker->numberBetween(),
             'aspect_type'     => 'create',
@@ -56,7 +56,7 @@ class WebhookTest extends TestCase
     {
         Event::fake([ActivityCreated::class]);
 
-        $response = $this->postJson(route('strava.webhook.invoke'), [
+        $response = $this->postJson(route('app.strava.webhook.invoke'), [
             'object_type'     => 'activity',
             'object_id'       => $activityId = $this->faker->numberBetween(),
             'aspect_type'     => 'create',
@@ -86,7 +86,7 @@ class WebhookTest extends TestCase
 
         $activity = $this->hasActivity();
 
-        $response = $this->postJson(route('strava.webhook.invoke'), [
+        $response = $this->postJson(route('app.strava.webhook.invoke'), [
             'object_type'     => 'activity',
             'object_id'       => $activity->foreign_id,
             'aspect_type'     => 'create',
@@ -111,7 +111,7 @@ class WebhookTest extends TestCase
         Event::fake([ActivityCreated::class]);
         $activity = $this->hasActivity();
 
-        $response = $this->postJson(route('strava.webhook.invoke'), [
+        $response = $this->postJson(route('app.strava.webhook.invoke'), [
             'object_type'     => 'activity',
             'object_id'       => $activity->foreign_id,
             'aspect_type'     => 'create',
@@ -142,7 +142,7 @@ class WebhookTest extends TestCase
 
         $athlete = $this->hasAthlete();
 
-        $response = $this->postJson(route('strava.webhook.invoke'), [
+        $response = $this->postJson(route('app.strava.webhook.invoke'), [
             'object_type'     => 'athlete',
             'object_id'       => $athlete->foreign_id,
             'aspect_type'     => 'delete',
@@ -176,7 +176,7 @@ class WebhookTest extends TestCase
 
         $foreignId = $this->faker->numberBetween();
 
-        $response = $this->postJson(route('strava.webhook.invoke'), [
+        $response = $this->postJson(route('app.strava.webhook.invoke'), [
             'object_type'     => 'athlete',
             'object_id'       => $foreignId,
             'aspect_type'     => 'delete',

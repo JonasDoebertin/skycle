@@ -31,7 +31,10 @@ jobs:
             - v1-composer-
       - run:
           name: Install composer dependencies
-          command: composer install --no-interaction --no-scripts --no-suggest --prefer-dist
+          command: composer install --no-interaction --no-scripts --no-suggest --prefer-dist --ignore-platform-reqs
+      - run:
+          name: Install Chrome binaries
+          command: php artisan dusk:chrome-driver
       - save_cache:
           key: v1-composer-{{ checksum "composer.lock" }}
           paths:
@@ -44,6 +47,9 @@ jobs:
       - run:
           name: Install npm dependencies
           command: npm install --no-audit
+      - run:
+          name: Build assets
+          command: npm run production
       - save_cache:
           key: v1-node-{{ checksum "package-lock.json" }}
           paths:
@@ -68,5 +74,22 @@ jobs:
           name: Run PHPUnit tests
           command: ./vendor/bin/phpunit --log-junit ./test-results/phpunit/junit.xml
 
+      - run:
+          name: Start Chrome driver
+          command: ./vendor/laravel/dusk/bin/chromedriver-linux
+          background: true
+
+      - run:
+          name: Start Laravel server
+          command: php artisan serve
+          background: true
+
+      - run:
+          name: Run Dusk tests
+          command: php artisan dusk --log-junit ./test-results/dusk/junit.xml
+
       - store_test_results:
           path: ./test-results
+
+      - store_artifacts:
+          path: ./tests/Browser/screenshots
