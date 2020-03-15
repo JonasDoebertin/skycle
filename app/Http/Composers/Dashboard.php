@@ -6,7 +6,7 @@ use App\Base\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
-class Home
+class Dashboard
 {
     /**
      * @var \App\Base\Models\User

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Strava\Requests;
+namespace App\Strava\Http\Requests;
 
 use App\Strava\Concerns\HandlesWebhooks;
 use Illuminate\Foundation\Http\FormRequest;

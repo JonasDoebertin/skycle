@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Strava\Controllers;
+namespace App\Strava\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Strava\Concerns\HandlesOAuth;
@@ -29,7 +29,7 @@ class CallbackController extends Controller
         $this->saveAthlete($token);
 
         return redirect()
-            ->route('home');
+            ->route('app.dashboard');
     }
 
     /**

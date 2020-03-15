@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Http\Composers\Home;
+use App\Http\Composers\Dashboard;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,6 +25,6 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer('home', Home::class);
+        View::composer('app.dashboard', Dashboard::class);
     }
 }

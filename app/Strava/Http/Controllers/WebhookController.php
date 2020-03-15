@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Strava\Controllers;
+namespace App\Strava\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Strava\Components\ActivityManager;
@@ -8,7 +8,7 @@ use App\Strava\Components\AthleteManager;
 use App\Strava\Events\ActivityCreated;
 use App\Strava\Events\AthleteDeauthorized;
 use App\Strava\Models\Athlete;
-use App\Strava\Requests\CallbackRequest;
+use App\Strava\Http\Requests\CallbackRequest;
 use Illuminate\Support\Facades\Response;
 
 class WebhookController extends Controller
@@ -36,7 +36,7 @@ class WebhookController extends Controller
     }
 
     /**
-     * @param \App\Strava\Requests\CallbackRequest $request
+     * @param \App\Strava\Http\Requests\CallbackRequest $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Strava\Exceptions\ActivityAlreadyExistsException
      * @throws \App\Strava\Exceptions\UnknownAthleteException
@@ -63,7 +63,7 @@ class WebhookController extends Controller
     /**
      * Check whether a reported activity is already known.
      *
-     * @param \App\Strava\Requests\CallbackRequest $request
+     * @param \App\Strava\Http\Requests\CallbackRequest $request
      * @return bool
      */
     protected function isKnownActivity(CallbackRequest $request): bool
@@ -74,7 +74,7 @@ class WebhookController extends Controller
     /**
      * Save a newly reported activity.
      *
-     * @param \App\Strava\Requests\CallbackRequest $request
+     * @param \App\Strava\Http\Requests\CallbackRequest $request
      * @param \App\Strava\Models\Athlete $athlete
      * @throws \App\Strava\Exceptions\ActivityAlreadyExistsException
      */

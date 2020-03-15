@@ -2,7 +2,9 @@
 
 namespace App\Strava\Models;
 
+use App\Base\Models\Cleaner;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -47,20 +49,11 @@ class Athlete extends Model
     protected $table = 'strava_athletes';
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that aren't mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'user_id',
-        'foreign_id',
-        'first_name',
-        'last_name',
-        'profile_picture',
-        'refresh_token',
-        'access_token',
-        'expires_at',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be cast to native types.
@@ -70,6 +63,7 @@ class Athlete extends Model
     protected $dates = [
         'created_at',
         'updated_at',
+        'paused_at',
         'expires_at',
     ];
 
@@ -79,6 +73,18 @@ class Athlete extends Model
     public function activities(): HasMany
     {
         return $this->hasMany(Activity::class);
+    }
+
+    /**
+     * Get the athletes enabled cleaners.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function cleaners(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Cleaner::class, 'cleaner_strava_athlete', 'strava_athlete_id')
+            ->withTimestamps();
     }
 
     /**
@@ -92,6 +98,26 @@ class Athlete extends Model
         return static::query()
             ->where('foreign_id', $foreignId)
             ->firstOrFail();
+    }
+
+    /**
+     * Check whether this account is paused.
+     *
+     * @return bool
+     */
+    public function isPaused(): bool
+    {
+        return $this->paused_at !== null;
+    }
+
+    /**
+     * Check whether the refresh token is empty, thus the account is disconnected.
+     *
+     * @return bool
+     */
+    public function isDisconnected(): bool
+    {
+        return $this->refresh_token === null;
     }
 
     /**
