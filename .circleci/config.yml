@@ -20,6 +20,12 @@ jobs:
               sudo composer self-update --no-interaction
 
       - run:
+          name: Setup environment
+          command: |
+              cp .env.testing .env
+              touch database/testing.sqlite
+
+      - run:
           name: Install Dockerize
           command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
           environment:
@@ -31,10 +37,12 @@ jobs:
             - v1-composer-
       - run:
           name: Install composer dependencies
-          command: composer install --no-interaction --no-suggest --prefer-dist --ignore-platform-reqs
+          command: |
+              composer install --no-interaction --no-suggest --prefer-dist --ignore-platform-reqs
+              php artisan key:generate
       - run:
           name: Install Chrome binaries
-          command: php artisan dusk:chrome-driver --env=testing
+          command: php artisan dusk:chrome-driver
       - save_cache:
           key: v1-composer-{{ checksum "composer.lock" }}
           paths:
@@ -56,19 +64,8 @@ jobs:
             - ./node_modules
 
       - run:
-          name: Prepare database
-          command: touch database/testing.sqlite
-
-      - run:
           name: Waiting for Redis server
           command: dockerize -wait tcp://localhost:6379 -timeout 1m
-
-      - run:
-          name: Configure application
-          command: |
-              cp .env.testing .env
-              php artisan key:generate
-#              php artisan optimize
 
       - run:
           name: Run PHPUnit tests
@@ -78,23 +75,19 @@ jobs:
           name: Start Chrome driver
           command: ./vendor/laravel/dusk/bin/chromedriver-linux
           background: true
-
       - run:
           name: Start Laravel server
           command: php artisan serve
           background: true
-
       - run:
           name: Run Dusk tests
           command: php artisan dusk --log-junit ./test-results/dusk/junit.xml
 
       - store_test_results:
           path: ./test-results
-
       - store_artifacts:
           path: ./tests/Browser/screenshots
           destination: screenshots
-
       - store_artifacts:
           path: ./tests/Browser/console
           destination: console
