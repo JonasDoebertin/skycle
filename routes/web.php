@@ -44,7 +44,6 @@ Route::namespace('\App\Http\Controllers\App')
 Route::prefix('strava')
     ->namespace('\App\Strava\Http\Controllers')
     ->group(function () {
-
         Route::get('athlete/{athlete}', 'SettingsController@show')
             ->name('app.strava.athlete.show');
 
@@ -68,5 +67,4 @@ Route::prefix('strava')
         Route::post('webhook', 'WebhookController')
             ->name('app.strava.webhook.invoke')
             ->middleware('json');
-
     });
