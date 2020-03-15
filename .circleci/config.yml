@@ -34,7 +34,7 @@ jobs:
           command: composer install --no-interaction --no-scripts --no-suggest --prefer-dist --ignore-platform-reqs
       - run:
           name: Install Chrome binaries
-          command: php artisan dusk:chrome-driver
+          command: php artisan dusk:chrome-driver --env=testing
       - save_cache:
           key: v1-composer-{{ checksum "composer.lock" }}
           paths:
